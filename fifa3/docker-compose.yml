@@ -1,0 +1,31 @@
+services:
+
+  # 1. ML: Oyuncu Fiziksel Özelliklerine Göre Kümeleme (K-Means)
+  ml-clustering:
+    build: .
+    container_name: fifa-clustering
+    command: python player_clustering.py
+    volumes:
+      - ml_output:/app/output
+    restart: "no"
+
+  # 2. ML: Boy ve Kiloya Göre Mevki Tahmini (Random Forest)
+  ml-position-predict:
+    build: .
+    container_name: fifa-position-predict
+    command: python position_prediction.py
+    volumes:
+      - ml_output:/app/output
+    restart: "no"
+
+  # 3. ML: Fiziksel Özelliklere Göre Ayak Tercihi Tahmini (SVM)
+  ml-foot-predict-svm:
+    build: .
+    container_name: fifa-foot-predict-svm
+    command: python foot_prediction_svm.py
+    volumes:
+      - ml_output:/app/output
+    restart: "no"
+
+volumes:
+  ml_output:

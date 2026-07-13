@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  # --- API Gateway ---
+  ml-gateway:
+    build: ./gateway
+    container_name: ml-gateway
+    ports:
+      - "8080:8080" # Dış dünyaya açılan tek port
+    environment:
+      - PORT=8080
+      # Servislerin adresleri konteyner adları ile belirtilir
+      - SENTIMENT_URL=http://ml-sentiment:5001
+      - CHURN_URL=http://ml-churn:5002
+      - RECOMMEND_URL=http://ml-recommend:5003
+      - FORECAST_URL=http://ml-forecast:5004
+      - SEGMENTATION_URL=http://ml-segmentation:5005
+    restart: unless-stopped
+    networks:
+      - ml-shared-network
+
+# Aynı ortak ağı buraya da ekliyoruz
+networks:
+  ml-shared-network:
+    external: true
